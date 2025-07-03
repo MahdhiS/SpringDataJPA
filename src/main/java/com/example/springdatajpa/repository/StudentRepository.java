@@ -2,7 +2,9 @@ package com.example.springdatajpa.repository;
 
 import com.example.springdatajpa.entity.Guardian;
 import com.example.springdatajpa.entity.Student;
+import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -30,7 +32,7 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
             value ="SELECT * FROM tbl_student s where s.email_address = ?1",
             nativeQuery = true
     )
-    String getStudentFirstNameByEmailIdNative(String emailId);
+    String getStudentFirstNameByEmailIdNative(String emailId)
 
     //Native Queries with named paramethers
     @Query(
@@ -38,6 +40,18 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
             nativeQuery = true
     )
     String getStudentFirstNameByEmailIdNativeNamedparam(@Param("emailId") String emailId);
+
+
+
+
+    //update or delete data via modi
+    @Modifying
+    @Transactional
+    @Query(
+            value = "update tbl_student set first_name = ?2 where email_address = ?1",
+            nativeQuery = true
+    )
+    void updateStudentFirstNameByEmailId(String emailId, String firstName);
 
 
 }
